@@ -1,4 +1,4 @@
-# KitchTk: A Colllection Widgets and Dialogs
+# KitchTk: A Collection Widgets and Dialogs
 
 A collection of miscellaneous dialogs and widgets for Tkinter that I have created over the years.
 
