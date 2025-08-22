@@ -115,19 +115,17 @@ class MP3Player(tk.Frame):
             self.master.after(self.playhead_update_interval, self._advance_playhead)
 
     def _on_slider_press(self, event):
-        if (event.widget.identify(event.x, event.y) == 'Horizontal.Scale.track' or
+        if str(event.widget.identify(event.x, event.y) == 'Horizontal.Scale.track' or
                 event.widget.identify(event.x, event.y) == 'Scale.trough'):
             return "break"
         self.user_updating_playhead = True
-        print(f"event.widget = {event.widget}\n"
-              f"event.widget.identify(event.x, event.y) = {event.widget.identify(event.x, event.y)}\n")
         if str(event.widget.identify(event.x, event.y)) == "Horizontal.Scale.slider":
             self.playback_obj.pause()
 
 
     def _on_slider_release(self, event):
-        if (event.widget.identify(event.x, event.y) == 'Horizontal.Scale.track' or
-                event.widget.identify(event.x, event.y) == 'Scale.trough'):
+        if str(event.widget.identify(event.x, event.y) == 'Horizontal.Scale.track' or
+                str(event.widget.identify(event.x, event.y)) == 'Scale.trough'):
             return "break"
         self.play()
         val = self.playhead.get()
