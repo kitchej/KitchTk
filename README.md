@@ -56,6 +56,7 @@ with open("../DOI.txt", 'r') as file:
 
 root.mainloop()
 ```
+##### Screenshot (Windows)
 
 ![find_rep_example.png](find_rep_example.png)
 
@@ -122,6 +123,7 @@ editor.pack()
 root.configure(menu=menubar)
 root.mainloop()
 ```
+##### Screenshot (Windows)
 
 ![font_chooser_example.png](font_chooser_example.png)
 
@@ -177,20 +179,25 @@ import tkinter as tk
 from tkinter import filedialog
 from mp3_player import MP3Player
 
+def load(mp3_player):
+    filepath = filedialog.askopenfilename(filetypes=[(".mp3", "*.mp3")])
+    mp3_player.load(filepath)
+
 main_win = tk.Tk()
+main_win.title("MP3 Player")
+
 player = MP3Player(('Helvetica', 12), master=main_win)
+button_frame = tk.Frame(main_win)
+load_button = ttk.Button(button_frame, text="Load", command=lambda: load(player))
+reset_button = ttk.Button(button_frame, text="Reset", command=player.reset_state)
 
-butt_frame = tk.Frame(main_win)
-btn_load = tk.Button(butt_frame, text="Load",
-                     command=lambda: player.load(filedialog.askopenfilename(filetypes=[("MP3 files", "*.mp3")])))
-btn_reset = tk.Button(butt_frame, text="Reset", command=player.reset_state)
-
-butt_frame.pack()
-btn_load.pack(side=tk.LEFT)
-btn_reset.pack(side=tk.LEFT)
+button_frame.pack()
+load_button.pack(side=tk.LEFT)
+reset_button.pack()
 player.pack()
 
 main_win.mainloop()
 ```
+##### Screenshot (Windows)
 
-![mp3_player_example.png](mp3_player_example.png)
+![mp3_example.png](mp3_example.png)

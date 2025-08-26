@@ -115,22 +115,26 @@ class MP3Player(tk.Frame):
             self.master.after(self.playhead_update_interval, self._advance_playhead)
 
     def _on_slider_press(self, event):
-        if str(event.widget.identify(event.x, event.y) == 'Horizontal.Scale.track' or
-                event.widget.identify(event.x, event.y) == 'Scale.trough'):
-            return "break"
-        self.user_updating_playhead = True
         if str(event.widget.identify(event.x, event.y)) == "Horizontal.Scale.slider":
+            self.user_updating_playhead = True
             self.playback_obj.pause()
-
+        else:
+            return "break" # Stops the default behavior for the slider from executing
 
     def _on_slider_release(self, event):
-        if str(event.widget.identify(event.x, event.y) == 'Horizontal.Scale.track' or
-                str(event.widget.identify(event.x, event.y)) == 'Scale.trough'):
-            return "break"
-        self.play()
-        val = self.playhead.get()
-        self.playback_obj.seek(val)
-        self.user_updating_playhead = False
+        print( 'WIDGET: ' + str(event.widget.identify(event.x, event.y)))
+        if (str(event.widget.identify(event.x, event.y)) == "Horizontal.Scale.slider" or
+                str(event.widget.identify(event.x, event.y)) == ""):
+            #                                                   ^^
+            #                                     User released the mouse outside the playhead widget
+            self.user_updating_playhead = False
+            self.play()
+            val = self.playhead.get()
+            self.playback_obj.seek(val)
+        else: # User released the mouse within the widget, but not within the slider.
+            return "break" # Stops the default behavior for the slider from executing
+
+
 
     def load(self, filepath):
         if not os.path.exists(filepath):
@@ -183,13 +187,23 @@ class MP3Player(tk.Frame):
 if __name__ == '__main__':
     from tkinter import filedialog
 
+
+    def load(mp3_player):
+        filepath = filedialog.askopenfilename(filetypes=[(".mp3", "*.mp3")])
+        mp3_player.load(filepath)
+
+
     main_win = tk.Tk()
+    main_win.title("MP3 Player")
+
     player = MP3Player(('Helvetica', 12), master=main_win)
-    butt_frame = tk.Frame(main_win)
-    butt = tk.Button(butt_frame, text="Load", command=lambda x=player: x.load(filedialog.askopenfilename(filetypes=[(".mp3", "*.mp3")])))
-    butt2 = tk.Button(butt_frame, text="Reset", command=player.reset_state)
-    butt_frame.pack()
-    butt.pack(side=tk.LEFT)
-    butt2.pack(side=tk.LEFT)
+    button_frame = tk.Frame(main_win)
+    load_button = ttk.Button(button_frame, text="Load", command=lambda: load(player))
+    reset_button = ttk.Button(button_frame, text="Reset", command=player.reset_state)
+
+    button_frame.pack()
+    load_button.pack(side=tk.LEFT)
+    reset_button.pack()
     player.pack()
+
     main_win.mainloop()
